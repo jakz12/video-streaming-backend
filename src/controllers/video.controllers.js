@@ -4,7 +4,7 @@ import { Video } from "../models/video.model.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
-const publishAVideo = asyncHandler(async (req, res) => {
+const publishAVideo = asyncHandler( async (req, res) => {
     try {
         const { title, description, duration} = req.body;
         if((title && description).trim() === ""){
@@ -53,4 +53,13 @@ const publishAVideo = asyncHandler(async (req, res) => {
     }
 })
 
-export { publishAVideo }
+const getAllVideos = asyncHandler( async (_, res) => {
+
+    const videos = await Video.find({});
+
+    return res.status(200).json(
+        new ApiResponse(200, videos, "Videos fetched successfully")
+    );
+})
+
+export { publishAVideo, getAllVideos }
