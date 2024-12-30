@@ -71,4 +71,20 @@ const getVideoById = asyncHandler( async (req, res) => {
     );
 })
 
-export { publishAVideo, getAllVideos, getVideoById }
+const deleteVideo = asyncHandler(async (req, res) => {
+    const { videoId } = req.params
+    
+    //check is user have a rights have to delete
+    const video = await Video.findById(videoId); 
+    if(!(video?.owner.equals(req.user?._id))){
+        throw new ApiError(400, "current user doesn't have a right to delete a video")
+    }
+
+    await Video.findByIdAndDelete(videoId);
+
+    res.status(200).json(
+        new ApiResponse(200, {}, "Video Deleted succesfully")
+    );
+})
+
+export { publishAVideo, getAllVideos, getVideoById, deleteVideo }
